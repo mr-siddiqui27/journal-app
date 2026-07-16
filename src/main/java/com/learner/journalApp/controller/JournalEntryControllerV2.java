@@ -21,14 +21,13 @@ public class JournalEntryControllerV2 {
     @GetMapping
     public ResponseEntity<?> getAll(){
         List<JournalEntry> all = journalEntryService.getAll();
-        if(all!=null && !all.isEmpty()) return new ResponseEntity<>(all, HttpStatus.OK);
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(all!=null && !all.isEmpty()) return  ResponseEntity.ok(all);       // or  return new ResponseEntity<>(all, HttpStatus.OK);
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);     // or return ResponseEntity.notFound().build();
     }
 
     @PostMapping
     public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry){    // can use ResponseEntity<?> then can use any class with it
         try{
-            myEntry.setDate(LocalDateTime.now());
             journalEntryService.saveEntry(myEntry);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         }catch (Exception e){
