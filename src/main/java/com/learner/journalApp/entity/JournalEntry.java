@@ -3,7 +3,9 @@ package com.learner.journalApp.entity;
 // called POJO Class - Plan Old java Object
 
 
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -13,8 +15,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Document(collection = "journal_entries")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class JournalEntry {
     @Id               // make unique
     private ObjectId id;

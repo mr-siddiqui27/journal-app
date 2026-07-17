@@ -1,14 +1,15 @@
 package com.learner.journalApp.controller;
 
 import com.learner.journalApp.entity.JournalEntry;
+import com.learner.journalApp.entity.User;
 import com.learner.journalApp.service.JournalEntryService;
+import com.learner.journalApp.service.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController         // Marks the class as a REST Controller     , -Receives HTTP Requests.       , -Returns JSON/String as response.
@@ -18,17 +19,21 @@ public class JournalEntryControllerV2 {
     @Autowired
     private JournalEntryService journalEntryService;
 
-    @GetMapping
-    public ResponseEntity<?> getAll(){
-        List<JournalEntry> all = journalEntryService.getAll();
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/{userName}")
+    public ResponseEntity<?> getAllJournalEntriesOfUser(@PathVariable String userName){
+        User user = userService.findByUserName(userName);
+        List<JournalEntry> all = user.getJournalEntries();
         if(all!=null && !all.isEmpty()) return  ResponseEntity.ok(all);       // or  return new ResponseEntity<>(all, HttpStatus.OK);
         else return new ResponseEntity<>(HttpStatus.NOT_FOUND);     // or return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
-    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry){    // can use ResponseEntity<?> then can use any class with it
+    @PostMapping("/{userName}")
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry, @PathVariable String userName){    // can use ResponseEntity<?> then can use any class with it
         try{
-            journalEntryService.saveEntry(myEntry);
+            journalEntryService.saveEntry(myEntry, userName);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -46,9 +51,15 @@ public class JournalEntryControllerV2 {
         }
     }
 
+    @DeleteMapping("id/{userName}/{myId}")
+    public ResponseEntity<?> deleteJournalEntryById(@PathVariable String userName , @PathVariable ObjectId myId){
+        journalEntryService.deleteById(myId, userName);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
-    @PutMapping("id/{myId}")
-    public ResponseEntity<?> updateJournalEntryById(@PathVariable ObjectId myId, @RequestBody JournalEntry newEntry){
+
+    @PutMapping("id/{userName}/{myId}")
+    public ResponseEntity<?> updateJournalEntryById(@PathVariable String userName , @PathVariable ObjectId myId, @RequestBody JournalEntry newEntry){
         JournalEntry old = journalEntryService.findById(myId).orElse(null);
         if(old != null){
             old.setTitle(newEntry.getTitle()!=null && !newEntry.getTitle().isEmpty() ? newEntry.getTitle() : old.getTitle());
@@ -59,13 +70,5 @@ public class JournalEntryControllerV2 {
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-    @DeleteMapping("id/{myId}")
-    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId myId){
-        journalEntryService.deleteById(myId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-
 
 }

@@ -7,7 +7,9 @@ package com.learner.journalApp.service;
 // Controller ---> Service ---> Repository
 
 import com.learner.journalApp.entity.JournalEntry;
+import com.learner.journalApp.entity.User;
 import com.learner.journalApp.repository.JournalEntryRepository;
+import com.learner.journalApp.service.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +24,26 @@ import java.util.Optional;
 public class JournalEntryService {
 
     @Autowired
-    private JournalEntryRepository journalEntryRepository;            // Dependency injection
+    private JournalEntryRepository journalEntryRepository;
 
-    public void saveEntry(JournalEntry journalEntry){
+    @Autowired
+    private UserService userService;
+    // Dependency injection
+
+    public void saveEntry(JournalEntry journalEntry, String userName){
         try{
+            User user = userService.findByUserName(userName);
             journalEntry.setDate(LocalDateTime.now());
-            journalEntryRepository.save(journalEntry);
+            JournalEntry saved = journalEntryRepository.save(journalEntry);
+            user.getJournalEntries().add(saved);
+            userService.saveEntry(user);
         }catch (Exception e){
             log.error("Exception", e);
         }
+    }
 
+    public void saveEntry(JournalEntry journalEntry){
+            journalEntryRepository.save(journalEntry);
     }
 
     public List<JournalEntry> getAll(){
@@ -42,10 +54,11 @@ public class JournalEntryService {
         return journalEntryRepository.findById(id);
     }
 
-    public Optional<JournalEntry> deleteById(ObjectId id){
-        Optional<JournalEntry> journal = findById(id);
+    public void deleteById(ObjectId id, String userName){
+        User user = userService.findByUserName(userName);
+        user.getJournalEntries().removeIf(x -> x.getId().equals(id));   // it will check all journal entries inside list and remove if id is present
+        userService.saveEntry(user);
         journalEntryRepository.deleteById(id);
-        return journal;
     }
 
 }
