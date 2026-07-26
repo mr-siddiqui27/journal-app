@@ -1,4 +1,4 @@
-package com.learner.journalApp.service.service;
+package com.learner.journalApp.service;
 
 
 // BEST PRACTICE-
@@ -6,16 +6,13 @@ package com.learner.journalApp.service.service;
 // Service calls -> repository
 // Controller ---> Service ---> Repository
 
-import com.learner.journalApp.entity.JournalEntry;
 import com.learner.journalApp.entity.User;
-import com.learner.journalApp.repository.JournalEntryRepository;
 import com.learner.journalApp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

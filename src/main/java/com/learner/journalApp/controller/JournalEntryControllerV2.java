@@ -3,7 +3,7 @@ package com.learner.journalApp.controller;
 import com.learner.journalApp.entity.JournalEntry;
 import com.learner.journalApp.entity.User;
 import com.learner.journalApp.service.JournalEntryService;
-import com.learner.journalApp.service.service.UserService;
+import com.learner.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,9 +36,9 @@ public class JournalEntryControllerV2 {
             journalEntryService.saveEntry(myEntry, userName);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         }catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping("id/{myId}")
