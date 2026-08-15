@@ -7,4 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface UserRepository extends MongoRepository<User, ObjectId> {       //JournalEntry- jispar aapko operation karna hai,   ObjectId- id type in JournalEntry
 
     User findByUserName(String userName);
+
+    void deleteByUserName(String userName);
 }
