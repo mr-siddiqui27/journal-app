@@ -31,8 +31,6 @@ public class UserService {
 
     public void saveEntry(User user){
         try{
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(List.of("user"));
             userRepository.save(user);
         }catch (Exception e){
             log.error("Exception", e);
