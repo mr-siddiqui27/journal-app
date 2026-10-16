@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev         # it will use application-dev.yml
+
+
+
+#logging:
+#  level:
+#    root: OFF       # Nothing will be print in console
+#
+
+#logging:
+#  level:
+#    root: ERROR       # only error will be printed in console
+
+
+#logging:
+#  level:
+#    com:
+#      learner:
+#        journalApp:
+#          service:
+#            userService: OFF       # for userService nothing will print

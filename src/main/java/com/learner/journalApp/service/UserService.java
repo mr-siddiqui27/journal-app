@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Slf4j
+@Slf4j      // Support with Lombok
 public class UserService {
 
     @Autowired
@@ -31,8 +31,6 @@ public class UserService {
 
     public void saveEntry(User user){
         try{
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(List.of("user"));
             userRepository.save(user);
         }catch (Exception e){
             log.error("Exception", e);
@@ -40,10 +38,24 @@ public class UserService {
 
     }
 
-    public void saveNewUser(User user){
+    public boolean saveNewUser(User user){
         try{
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(List.of("user"));
+            user.setRoles(List.of("USER"));
+            userRepository.save(user);
+            return true;
+        }catch (Exception e){
+            log.error("error accures in {} :",user.getUserName(), e);
+            log.trace("jsgjdfsgdfs");
+            log.info("sjfdgkl");
+            log.debug("jgsgsj");
+            return false;
+        }
+    }
+    public void saveAdmin(User user){
+        try{
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(List.of("ADMIN", "USER"));
             userRepository.save(user);
         }catch (Exception e){
             log.error("Exception", e);

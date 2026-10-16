@@ -31,6 +31,7 @@ public class SpringSecurity {
 
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/journal/**", "/user/**").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())

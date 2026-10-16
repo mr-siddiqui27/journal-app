@@ -1,6 +1,7 @@
 package com.learner.journalApp.entity;
 
 
+//import jdk.internal.util.StaticProperty;
 import lombok.Data;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -30,4 +31,8 @@ public class User {
     private List<JournalEntry> journalEntries = new ArrayList<>();
 
     private List<String> roles;
+
+//    public static User builder() {
+//
+//    }
 }
